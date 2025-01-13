@@ -3,11 +3,11 @@
 
 
 int main(void) {
-    int width, height, channels;
-    unsigned char *img = stbi_load("golem.png", &width, &height, &channels, 0);
-    if(img == NULL) {
-        printf("Error in loading the image\n");
+    const char* fname = "golem.png";
+    Image img = load_input_image(fname);
+    if(img.img == NULL) {
+        printf("Failed to load image: '%d'\n", fname);
         exit(1);
     }
-    printf("Loaded image with a width of %dpx, a height of %dpx and %d channels\n", width, height, channels);
+    printf("Loaded image '%s' with w: %dpx, h: %dpx and %d channels\n", fname, img.width, img.height, img.channels);
 }
