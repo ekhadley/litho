@@ -1,13 +1,18 @@
 #include <stdio.h>
-#include "img.c"
+#include <math.h>
+#include "geometry.c"
 
 
 int main(void) {
-    const char* fname = "golem.png";
+    const char *fname = "dorm.png";
     Image img = load_input_image(fname);
     if(img.img == NULL) {
-        printf("Failed to load image: '%d'\n", fname);
+        printf("Failed to load image: '%s'\n", fname);
         exit(1);
     }
-    printf("Loaded image '%s' with w: %dpx, h: %dpx and %d channels\n", fname, img.width, img.height, img.channels);
+    printf("Loaded image '%s' of shape (%d, %d, %d)\n", fname, img.height, img.width, img.channels);
+    
+    Obj litho = makeLithoObj(img, defaultLithoOptions());
+
+    saveObj(litho, "litho.obj");
 }
