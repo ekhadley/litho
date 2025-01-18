@@ -10,12 +10,12 @@ typedef struct {
     unsigned char* img;
 } Image;
 
-Image load_input_image(const char* filename) {
+Image loadInputImage(const char* filename) {
     int width, height, channels;
     unsigned char* img = stbi_load(filename, &width, &height, &channels, 0);
     return (Image){.width = width, .height = height, .channels = channels, .img = img};
 }
-void save_png(const char* filename, Image img) {
+void savePng(const char* filename, Image img) {
     stbi_write_png(filename, img.width, img.height, img.channels, img.img, img.width*img.channels);
 }
 
@@ -53,3 +53,18 @@ Image rgbToBrightness(Image img) {
     }
     return brightness;
 }
+
+// float pixelMean(Image img, int channel) { // gives mean of pixels on a particular channel
+//     float s = 0.0;
+//     int pcount = img.height*img.width;
+//     for (int i = channel; i < pcount; i += img.channels) {
+//         s += img.img[i];
+//     }
+//     return s/pcount;
+// }
+
+// void scalePixels(Image img, float s, char maxVal) {
+//     for (int i = 0; i < img.height*img.width*img.channels; i++) {
+//         img.img[i] = min(maxVal, floor(img.img[i]*s));
+//     }
+// }
