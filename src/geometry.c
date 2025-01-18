@@ -4,30 +4,26 @@
 
 
 typedef struct {
-    const int has_frame;
-    const int pixels_per_vertex;
-    const float min_thickness;
-    const float max_thickness;
-    //const float obj_height;
-    //const float obj_width;
-    const float bright_scale;
-    // need to define frame thickness, width, bevel angle, ?
-    // we need to know how many pixels are in between the vertices on the image side, like the resolution of the 3d object.
-    // theres no point in having fewer than vertex per pixel, but is there any cost to having exactly 1 per pixel?
-    // this fixes us to maximum spatial resolution, so file sizes will be larger, but the slicer will just get rid of as
-    // much detail as necessary to print so ..?
-    // will test later with different p/v values to see effect on file size and possible remove if negligible.
+    int has_frame;
+    int pixels_per_vertex;
+    float min_thickness;
+    float max_thickness;
+    float bright_scale;
+    float frame_thickness;
+    float frame_angle;
+    float frame_width;
 } LithoOptions;
 
 LithoOptions defaultLithoOptions() {
     return (LithoOptions){
         .has_frame = 0,
-        .pixels_per_vertex = 150,
+        .pixels_per_vertex = 3,
         .min_thickness = 1.0,
         .max_thickness = 5,
-        //.obj_height = 100,
-        //.obj_width = 100,
-        .bright_scale = 1.0,
+        .bright_scale = 0.01,
+        .frame_thickness = 30,
+        .frame_angle = 90,
+        .frame_width = 20,
     };
 }
 
@@ -70,6 +66,7 @@ Obj makeLithoObj(Image img, LithoOptions opts) {
     Obj obj = initLithoObj(img, opts);
     Image brightness = rgbToBrightness(img);
 
+    int imglen = img.width*img.height*img.channels;
     int vcount = 0;
     int fcount = 0;
     int vwidth = brightness.width/opts.pixels_per_vertex;
@@ -77,7 +74,8 @@ Obj makeLithoObj(Image img, LithoOptions opts) {
     for (int y = 0; y < vheight; y += 1) {
         for (int x = 0; x < vwidth; x += 1) { // face vertices
             int b = brightness.img[img.width*y*opts.pixels_per_vertex + x*opts.pixels_per_vertex];
-            float h = (b/50.0)*opts.bright_scale + opts.min_thickness;
+            //float h = b*opts.bright_scale + opts.min_thickness;
+            float h = -b*opts.bright_scale;
 
             obj.verts[vcount++] = (Pos){.x = x, .y=h, .z=y};
             if ((x != (vwidth - 1)) && (y != 0)) {
@@ -87,6 +85,7 @@ Obj makeLithoObj(Image img, LithoOptions opts) {
             }
         }
     }
+    if (opts.has_frame == 0) {
     int bx0 = vcount + 1; // this is the index (shifted by 1 cuase of obj file indexing) of the first vertex placed on the backside perimeter
     for (int x = 0; x < vwidth; x += 1) { // y-parallel back plane perimeter vertices
         obj.verts[vcount++] = (Pos){.x = x, .y=0, .z=0};
@@ -100,7 +99,6 @@ Obj makeLithoObj(Image img, LithoOptions opts) {
         }
     }
     int by0 = vcount + 1; // above
-    if (opts.has_frame == 0) {
         for (int y = 1; y < vheight-1; y += 1) {
             obj.verts[vcount++] = (Pos){.x = 0, .y=0, .z=y};
             obj.verts[vcount++] = (Pos){.x = vwidth-1, .y=0, .z=y}; // cringe variable naming bro
@@ -121,10 +119,28 @@ Obj makeLithoObj(Image img, LithoOptions opts) {
         obj.faces[fcount++] = (Face){.v1=by0 + 1, .v2=bx0+2*(vwidth-1), .v3=vwidth};
         obj.faces[fcount++] = (Face){.v1=bx0 + 2*vwidth - 1, .v2=vwidth*(vheight-1), .v3=vwidth*vheight};
         obj.faces[fcount++] = (Face){.v1=bx0 + 2*vwidth - 1, .v2=by0 + 2*(vheight - 3) - 1, .v3=vwidth*(vheight-1)};
-        // 2 backside faces
-        obj.faces[fcount++] = (Face){.v1=bx0, .v2=bx0 + 2*vwidth - 1, .v3= bx0 + 1};
+        obj.faces[fcount++] = (Face){.v1=bx0, .v2=bx0 + 2*vwidth - 1, .v3= bx0 + 1}; // 2 backside faces
         obj.faces[fcount++] = (Face){.v1=bx0, .v2= bx0 + 2*vwidth - 2, .v3=bx0 + 2*vwidth - 1};
+    } else {
+        int fc0 = vcount; // start of the 8 corners of the frame
+        obj.verts[vcount++] = (Pos){.x = -opts.frame_width, .y=-opts.frame_thickness/2.0, .z=-opts.frame_width};                  // 1: - - -
+        obj.verts[vcount++] = (Pos){.x = vwidth + opts.frame_width, .y=-opts.frame_thickness/2.0, .z=-opts.frame_width};          // 2: + - -
+        obj.verts[vcount++] = (Pos){.x = -opts.frame_width, .y=-opts.frame_thickness/2.0, .z=vheight + opts.frame_width};         // 3: - - +
+        obj.verts[vcount++] = (Pos){.x = vwidth + opts.frame_width, .y=-opts.frame_thickness/2.0, .z=vheight + opts.frame_width}; // 4: + - +
+        obj.verts[vcount++] = (Pos){.x = -opts.frame_width, .y=opts.frame_thickness/2.0, .z=-opts.frame_width};                   // 5: - + -
+        obj.verts[vcount++] = (Pos){.x = vwidth + opts.frame_width, .y=opts.frame_thickness/2.0, .z=-opts.frame_width};           // 6: + + -
+        obj.verts[vcount++] = (Pos){.x = -opts.frame_width, .y=opts.frame_thickness/2.0, .z=vheight + opts.frame_width};          // 7: - + +
+        obj.verts[vcount++] = (Pos){.x = vwidth + opts.frame_width, .y=opts.frame_thickness/2.0, .z=vheight + opts.frame_width};  // 8: + + +
+        obj.faces[fcount++] = (Face){.v1=fc0+6, .v2=fc0+2, .v3=fc0+1};
+        obj.faces[fcount++] = (Face){.v1=fc0+6, .v2=fc0+1, .v3=fc0+5};
+        obj.faces[fcount++] = (Face){.v1=fc0+1, .v2=fc0+3, .v3=fc0+7};
+        obj.faces[fcount++] = (Face){.v1=fc0+1, .v2=fc0+7, .v3=fc0+5};
+        obj.faces[fcount++] = (Face){.v1=fc0+4, .v2=fc0+7, .v3=fc0+3};
+        obj.faces[fcount++] = (Face){.v1=fc0+4, .v2=fc0+8, .v3=fc0+7};
+        obj.faces[fcount++] = (Face){.v1=fc0+6, .v2=fc0+4, .v3=fc0+2};
+        obj.faces[fcount++] = (Face){.v1=fc0+4, .v2=fc0+6, .v3=fc0+8};
     }
+
     if (vcount != obj.nverts) {
         printf("\nWarning: allocated %d vertices for the lithophane object, but created %d", obj.nverts, vcount);
         obj.nverts = vcount;
@@ -132,8 +148,8 @@ Obj makeLithoObj(Image img, LithoOptions opts) {
     if (fcount != obj.nfaces) {
         printf("\nWarning: allocated %d faces for the lithophane object, but created %d", obj.nfaces, fcount);
         obj.nfaces = fcount;
-    }
-    
+    } 
+
     stbi_image_free(brightness.img);
     return obj;
 }
