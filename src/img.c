@@ -54,17 +54,31 @@ Image rgbToBrightness(Image img) {
     return brightness;
 }
 
-// float pixelMean(Image img, int channel) { // gives mean of pixels on a particular channel
-//     float s = 0.0;
-//     int pcount = img.height*img.width;
-//     for (int i = channel; i < pcount; i += img.channels) {
-//         s += img.img[i];
-//     }
-//     return s/pcount;
-// }
-
-// void scalePixels(Image img, float s, char maxVal) {
-//     for (int i = 0; i < img.height*img.width*img.channels; i++) {
-//         img.img[i] = min(maxVal, floor(img.img[i]*s));
-//     }
-// }
+float getPixelMean(const Image img, const int channel) { // gives mean of pixels on a particular channel
+    float mean = 0.0;
+    for (int i = channel; i < (img.height*img.width); i += img.channels) {
+        mean += img.img[i];
+    }
+    return mean/(img.height*img.width);
+}
+float getPixelVar(const Image img, const float mean, const int channel) { // gives mean of pixels on a particular channel
+    float var = 0.0;
+    for (int i = channel; i < (img.height*img.width); i += img.channels) {
+        var += pow(img.img[i] - mean, 2);
+    }
+    return var/(img.height*img.width);
+}
+typedef struct {float min; float max;} MinMax;
+MinMax getPixelMinMax(const Image img, const int channel) { // gives mean of pixels on a particular channel
+    float min = img.img[channel];
+    float max = img.img[channel];
+    for (int i = channel; i < (img.height*img.width); i += img.channels) {
+        if (img.img[i] < min) {
+            min = img.img[i];
+        }
+        if (img.img[i] > max) {
+            max = img.img[i];
+        }
+    }
+    return (MinMax){.min = min, .max = max};
+}

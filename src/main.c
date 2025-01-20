@@ -10,12 +10,11 @@ int main(void) {
         printf("Failed to load image: '%s'\n", fname);
         exit(1);
     }
-    printf("Loaded image '%s' of shape (%d, %d, %d)\n", fname, img.height, img.width, img.channels);
+    printf("\nLoaded image '%s' of shape (%d, %d, %d)", fname, img.height, img.width, img.channels);
     
     LithoOptions opts = defaultLithoOptions();
-    opts.has_frame = 1;
     Obj litho = makeLithoObj(img, opts);
-    printf("\nCreated lithophane object with %d vertices and %d faces", litho.nverts, litho.nfaces);
+    printf("\nCreated lithophane object with %d vertices and %d faces", litho.n_verts, litho.n_faces);
 
     saveObj(litho, "litho.obj");
     printf("\nSaved lithophane obj file.");
