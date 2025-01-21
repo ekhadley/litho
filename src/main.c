@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <stdlib.h>
+#include <limits.h>
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
 #include "geometry.c"
 
 // ANSI color codes
@@ -12,6 +19,25 @@
 #define COLOR_BLUE    "\x1b[34m"
 #define COLOR_MAGENTA "\x1b[35m"
 #define COLOR_CYAN    "\x1b[36m"
+
+// Get absolute path, with cross-platform support
+char* get_absolute_path(const char* path) {
+    char* abs_path = (char*)malloc(PATH_MAX);
+    #ifdef _WIN32
+        // Windows version
+        if (GetFullPathNameA(path, PATH_MAX, abs_path, NULL) == 0) {
+            free(abs_path);
+            return strdup(path);  // Return original on error
+        }
+    #else
+        // Unix version
+        if (realpath(path, abs_path) == NULL) {
+            free(abs_path);
+            return strdup(path);  // Return original on error
+        }
+    #endif
+    return abs_path;
+}
 
 void print_usage() {
     LithoOptions defaults = defaultLithoOptions();
@@ -115,15 +141,21 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // Get absolute paths
+    char* abs_input_path = get_absolute_path(input_file);
+    char* abs_output_path = get_absolute_path(output_file);
+
     // Load and process image
-    Image img = loadInputImage(input_file);
+    Image img = loadInputImage(abs_input_path);
     if(img.img == NULL) {
-        printf("%sError:%s Failed to load image: '%s%s%s'\n", COLOR_RED, COLOR_RESET, COLOR_YELLOW, input_file, COLOR_RESET);
+        printf("%sError:%s Failed to load image: '%s%s%s'\n", COLOR_RED, COLOR_RESET, COLOR_YELLOW, abs_input_path, COLOR_RESET);
+        free(abs_input_path);
+        free(abs_output_path);
         return 1;
     }
     printf("%sLoaded image%s '%s%s%s' of shape (%s%d%s, %s%d%s, %s%d%s)\n", 
            COLOR_GREEN, COLOR_RESET, 
-           COLOR_YELLOW, input_file, COLOR_RESET,
+           COLOR_YELLOW, abs_input_path, COLOR_RESET,
            COLOR_CYAN, img.height, COLOR_RESET,
            COLOR_CYAN, img.width, COLOR_RESET,
            COLOR_CYAN, img.channels, COLOR_RESET);
@@ -134,12 +166,14 @@ int main(int argc, char *argv[]) {
            COLOR_CYAN, litho.n_verts, COLOR_RESET,
            COLOR_CYAN, litho.n_faces, COLOR_RESET);
 
-    saveObj(litho, output_file);
+    saveObj(litho, abs_output_path);
     printf("%sSaved lithophane%s to: '%s%s%s'\n", 
            COLOR_GREEN, COLOR_RESET,
-           COLOR_YELLOW, output_file, COLOR_RESET);
+           COLOR_YELLOW, abs_output_path, COLOR_RESET);
 
     // Clean up
+    free(abs_input_path);
+    free(abs_output_path);
     free(litho.verts);
     free(litho.faces);
     return 0;
