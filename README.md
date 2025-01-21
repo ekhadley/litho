@@ -45,3 +45,16 @@ The output is a standard .obj file that you can slice with your favorite 3D prin
 - Lower `pixels_per_vertex` for higher detail (but larger files)
 - Print vertically for best layer-wise detail
 - PNG recommended for highest quality
+
+## To Do
+- Different output formats (STL, OBJ, etc.)
+- More frame options
+- GUI
+    - Possibly a web app
+    - Possibly with a renderer for previewing
+- Better image preprocessing
+- Refactor how faces are added
+    - I'm thinking we have an addFace function that can take some combination of vertex positions or vertex indices.
+    - For any vertex positions passed, it would search the current vertices and if one is close enough, just use that index for face grouping.
+    - It would then return 3 indices for the vertices it chose to make up the face.
+    - This lets us create vertices, join them into faces, and give them easier names (via the returned indices) with one call, avoiding the need for elaborate indexing schemes to keep track of previous vertices.
