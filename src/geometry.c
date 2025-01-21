@@ -249,23 +249,6 @@ Obj makeLithoObj(Image img, LithoOptions opts) {
         addFace(&obj, bp0 + 4, bp0 + 7, bp0 + 11); 
         addFace(&obj, bp0 + 4, bp0 + 2, bp0 + 7); 
         if (opts.bevel_corners == 1) {
-            addFace(&obj, fpwt + 1, fpnt + 1, ifc0 + 3); // topside corner connections
-            addFace(&obj, fpwt + 1, 1, fpnt + 1);
-            addFace(&obj, fpnt + vwidth, fpet + 1, ifc0 + 4);
-            addFace(&obj, fpnt + vwidth, vwidth, fpet + 1);
-            addFace(&obj, fpet + vheight, vwidth*vheight, fpst + vwidth);
-            addFace(&obj, fpst + vwidth, ifc0 + 8, fpet + vheight);
-            addFace(&obj, vwidth*(vheight - 1) + 1, fpwt + vheight, fpst + 1);
-            addFace(&obj, fpst + 1, fpwt + vheight, ifc0 + 7);
-            addFace(&obj, bp0 + 6, bp0 + 5, ifc0 + 1); // topside corner connections
-            addFace(&obj, bp0 + 6, bp0 + 1, bp0 + 5);
-            addFace(&obj, bp0 + 8, ifc0 + 2, bp0 + 7);
-            addFace(&obj, bp0 + 8, bp0 + 7, bp0 + 2);
-            addFace(&obj, bp0 + 11, bp0 + 12, bp0 + 4);
-            addFace(&obj, bp0 + 12, bp0 + 11, ifc0 + 6);
-            addFace(&obj, bp0 + 3, bp0 + 10, bp0 + 9);
-            addFace(&obj, bp0 + 10, ifc0 + 5, bp0 + 9);
-        } else {
             addFace(&obj, 1, fpnt + 1, ifc0 + 3); // topside corner connections
             addFace(&obj, 1, ifc0 + 3, fpwt + 1);
             addFace(&obj, vwidth, ifc0 + 4, fpnt + vwidth);
@@ -282,6 +265,23 @@ Obj makeLithoObj(Image img, LithoOptions opts) {
             addFace(&obj, bp0 + 4, ifc0 + 6, bp0 + 12);
             addFace(&obj, bp0 + 3, ifc0 + 5, bp0 + 9);
             addFace(&obj, bp0 + 3, bp0 + 10, ifc0 + 5);
+        } else {
+            addFace(&obj, fpwt + 1, fpnt + 1, ifc0 + 3); // topside corner connections
+            addFace(&obj, fpwt + 1, 1, fpnt + 1);
+            addFace(&obj, fpnt + vwidth, fpet + 1, ifc0 + 4);
+            addFace(&obj, fpnt + vwidth, vwidth, fpet + 1);
+            addFace(&obj, fpet + vheight, vwidth*vheight, fpst + vwidth);
+            addFace(&obj, fpst + vwidth, ifc0 + 8, fpet + vheight);
+            addFace(&obj, vwidth*(vheight - 1) + 1, fpwt + vheight, fpst + 1);
+            addFace(&obj, fpst + 1, fpwt + vheight, ifc0 + 7);
+            addFace(&obj, bp0 + 6, bp0 + 5, ifc0 + 1); // topside corner connections
+            addFace(&obj, bp0 + 6, bp0 + 1, bp0 + 5);
+            addFace(&obj, bp0 + 8, ifc0 + 2, bp0 + 7);
+            addFace(&obj, bp0 + 8, bp0 + 7, bp0 + 2);
+            addFace(&obj, bp0 + 11, bp0 + 12, bp0 + 4);
+            addFace(&obj, bp0 + 12, bp0 + 11, ifc0 + 6);
+            addFace(&obj, bp0 + 3, bp0 + 10, bp0 + 9);
+            addFace(&obj, bp0 + 10, ifc0 + 5, bp0 + 9);
         }
 
     } else {
