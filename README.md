@@ -58,3 +58,4 @@ The output is a standard .obj file that you can slice with your favorite 3D prin
     - For any vertex positions passed, it would search the current vertices and if one is close enough, just use that index for face grouping.
     - It would then return 3 indices for the vertices it chose to make up the face.
     - This lets us create vertices, join them into faces, and give them names (via the returned indices, avoiding having to repeatedly instantiate the same 3d position or research in the existing vertices) with one call, avoiding the need for elaborate indexing schemes to keep track of previous vertices.
+    - This function could also be easily wrapped to create helper functions for creating not just triangles, but more complex faces (e.g. a rect function whcih only requires two arguments).
