@@ -11,7 +11,7 @@ Any C compiler should work. Only depedency is [stb_image](https://github.com/not
 ## Building
 Just clone the repo, cd in and:
 ```bash
-gcc src/main.c -o litho -O3 -lm
+gcc src/main.c -o litho -lm
 ```
 
 ## Usage
