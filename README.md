@@ -57,4 +57,4 @@ The output is a standard .obj file that you can slice with your favorite 3D prin
     - I'm thinking we have an addFace function that can take some combination of vertex positions or vertex indices.
     - For any vertex positions passed, it would search the current vertices and if one is close enough, just use that index for face grouping.
     - It would then return 3 indices for the vertices it chose to make up the face.
-    - This lets us create vertices, join them into faces, and give them easier names (via the returned indices) with one call, avoiding the need for elaborate indexing schemes to keep track of previous vertices.
+    - This lets us create vertices, join them into faces, and give them names (via the returned indices, avoiding having to repeatedly instantiate the same 3d position or research in the existing vertices) with one call, avoiding the need for elaborate indexing schemes to keep track of previous vertices.
