@@ -47,7 +47,7 @@ The output is a standard .obj file that you can slice with your favorite 3D prin
 - PNG recommended for highest quality
 
 ## To Do
-- Different output formats (STL, OBJ, etc.)
+- Different output formats (STL, 3MF, etc.) (these obj files are really big and slow to slice)
 - More frame options
 - GUI
     - Possibly a web app
