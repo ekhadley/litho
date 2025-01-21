@@ -6,7 +6,7 @@ Turn any image into a 3D-printable lithophane! A lithophane is a thin translucen
 - Adjustable thickness, resolution, and scaling
 
 ## Dependencies
-Any C compilers should work. Only depedency is [stb_image](https://github.com/nothings/stb) for image loading, which is included.
+Any C compiler should work. Only depedency is [stb_image](https://github.com/nothings/stb) for image loading, which is included.
 
 ## Building
 Just clone the repo, cd in and:
