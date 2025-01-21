@@ -1,8 +1,47 @@
-### A Lithophane maker written in C
-Convert an image to a lithophane as a 3d object file, ready to be sliced and printed on a normal FDM 3d printer.  
-`main` contains code for the CLI and its options.  
-`img` defines an image type as well as the method for loading images, using [`stb_image`](https://github.com/nothings/stb).  
-`geometry` figures out where the vertices of the object file should be based on the loaded image, and code for how the output file is written.  
-  
-  actually i want to try out CLay so i might make it an application and potentially have an embedded little window so you can look at and rotate the 3d object as you tweak settings and stuff.  
-  hmm...
+# Image to Lithophane CLI 
+
+Turn any image into a 3D-printable lithophane! A lithophane is a thin translucent panel that reveals an image when backlit. Features include:
+- Convert any common image format (PNG, JPEG, BMP, etc.) to a 3D lithophane model
+- Optional decorative frame with customizable dimensions and beveled corners
+- Adjustable thickness, resolution, and scaling
+
+## Dependencies
+Any C compilers should work. Only depedency is [stb_image](https://github.com/nothings/stb) for image loading, which is included.
+
+## Building
+Just clone the repo, cd in and:
+```bash
+gcc src/main.c -o litho -lm
+```
+
+## Usage
+Basic usage:
+```bash
+litho your_image.jpg
+```
+
+With options:
+```bash
+litho your_image.png --frame_width 25 --min_thickness 1.5 --bevel_corners -o output.obj
+```
+
+### Options
+- `--has_frame`: Add a decorative frame
+- `--bevel_corners`: Add beveled corners to the frame
+- `--min_thickness <mm>`: Minimum thickness (default: 3.0mm)
+- `--max_thickness <mm>`: Maximum thickness (default: 10mm)
+- `--frame_width <mm>`: Frame width (default: 25mm)
+- `--frame_thickness <mm>`: Frame thickness (default: 25mm)
+- `--frame_angle <degrees>`: Frame bevel angle (default: 45°)
+- `--pixels_per_vertex <n>`: Resolution control (default: 2)
+- `--scale <n>`: Overall scale factor (default: 0.25)
+- `--flip_x/y/z`: Flip along respective axis
+
+The output is a standard .obj file that you can slice with your favorite 3D printing software!
+
+## Tips
+- For best results, use high-contrast images
+- Try adjusting `bright_scale` if the contrast looks off
+- Lower `pixels_per_vertex` for higher detail (but larger files)
+- Print vertically for best layer-wise detail
+- PNG recommended for highest quality
