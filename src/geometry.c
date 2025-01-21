@@ -346,9 +346,14 @@ Obj makeLithoObj(Image img, LithoOptions opts) {
 
 
 
-void saveObj(Obj obj, const char* filename) {
+void saveObj(Obj obj, const char* filename, int argc, char* argv[]) {
     FILE *f = fopen(filename, "w");
     fprintf(f, "# Lithophane obj file made using https://github.com/ekhadley/litho\n");
+    fprintf(f, "# Generated with command:");
+    for (int i = 0; i < argc; i++) {
+        fprintf(f, " %s", argv[i]);
+    }
+    fprintf(f, "\n");
     fprintf(f, "o litho\n");
     for (int i = 0; i < obj.n_verts; i++) {
         fprintf(f, "v %f %f %f\n", obj.verts[i].x, obj.verts[i].y, obj.verts[i].z);

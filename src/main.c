@@ -166,7 +166,7 @@ int main(int argc, char *argv[]) {
            COLOR_CYAN, litho.n_verts, COLOR_RESET,
            COLOR_CYAN, litho.n_faces, COLOR_RESET);
 
-    saveObj(litho, abs_output_path);
+    saveObj(litho, abs_output_path, argc, argv);
     printf("%sSaved lithophane%s to: '%s%s%s'\n", 
            COLOR_GREEN, COLOR_RESET,
            COLOR_YELLOW, abs_output_path, COLOR_RESET);
