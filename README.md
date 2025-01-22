@@ -44,10 +44,10 @@ The output is a standard .obj file that you can slice with your favorite 3D prin
 
 ## Tips
 - For best results, use high-contrast images
+- Print vertically with layer heights of 0.12 ish
+- Normal print speed is fine.
 - Try adjusting `bright_scale` if the contrast looks off
-- Lower `pixels_per_vertex` for higher detail (but larger files)
-- Print vertically for best layer-wise detail
-- PNG recommended for highest quality
+- Lower `pixels_per_vertex` to make the image smaller and lower resolution (but larger files)
 
 ## To Do
 - Different output formats (STL, 3MF, etc.) (these obj files are really big and slow to slice)
