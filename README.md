@@ -52,7 +52,7 @@ The output is a standard .obj file that you can slice with your favorite 3D prin
 - GUI
     - Possibly a web app
     - Possibly with a renderer for previewing
-- Better image preprocessing
+- Better image preprocessing (denoising, smoothing)
 - Refactor how faces are added
     - I'm thinking we have an addFace function that can take some combination of vertex positions or vertex indices.
     - For any vertex positions passed, it would search the current vertices and if one is close enough, just use that index for face grouping.
@@ -60,3 +60,4 @@ The output is a standard .obj file that you can slice with your favorite 3D prin
     - This lets us create vertices, join them into faces, and give them names (via the returned indices, avoiding having to repeatedly instantiate the same 3d position or research in the existing vertices) with one call, avoiding the need for elaborate indexing schemes to keep track of previous vertices.
     - This function could also be easily wrapped to create helper functions for creating not just triangles, but more complex faces (e.g. a rect function whcih only requires two arguments).
 - Pixels per vertex is a bad setting cause it makes the natural unit of distance in the object file to be 'pixels' which is only meaningful relative to the input image size. We should just set object size, and aadjust the pixel width accordingly so the units is mm.
+- Prints all seem to have a weak vertical line in the middle. idk what that's about.
