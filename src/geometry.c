@@ -343,8 +343,9 @@ Obj makeLithoObj(Image img, LithoOptions opts) {
     stbi_image_free(brightness.img);
     return obj;
 }
-
-
+Obj makeDefaultLithoObj(Image img) {
+  return makeLithoObj(img, defaultLithoOptions());
+}
 
 void saveObj(Obj obj, const char* filename, int argc, char* argv[]) {
     FILE *f = fopen(filename, "w");
