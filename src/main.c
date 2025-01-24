@@ -10,6 +10,7 @@
 #endif
 #include "geometry.c"
 
+
 // ANSI color codes
 #define COLOR_RESET   "\x1b[0m"
 #define COLOR_BOLD    "\x1b[1m"
