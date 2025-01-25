@@ -1,9 +1,9 @@
-# Image to Lithophane CLI 
-
+# Image to Lithophane CLI
 Turn any image into a 3D-printable lithophane! A lithophane is a thin translucent panel that reveals an image when backlit. Features include:
 - Convert any common image format (PNG, JPEG, BMP, etc.) to a 3D lithophane model
 - Optional decorative frame with customizable dimensions and other options
 - Adjustable thickness, resolution, and scaling
+Written in C  
 
 ![results.png](results.png)
 could be worse...
